@@ -1,0 +1,64 @@
+#include <vector>
+using namespace std;
+
+class Matrix{
+
+    private:
+    unsigned int numRows;
+    unsigned int numColumns;
+    vector<vector<double>> entries;
+
+
+    /**
+    * @brief Construct a new default Matrix object. Creates an empty matrix of size 0 x 0. s
+    * 
+    */
+    Matrix();
+    
+
+    public:
+    /**
+     * @brief Construct a new Matrix object from a formatted csv file. The file needs to begin with a line 
+     * containing two numbers: r,c. Where r is the number of rows in the matrix and c is the number of columns. 
+     * The rest of the file contains the elements of the actual matrix, with each element being separated by a comma
+     * and each row beginning with a new line. 
+     * 
+     * @param matrix_csv: name of the csv file containing the matrix
+     */
+    Matrix(const char* const &matrix_csv);
+
+    /**
+     * @brief Construct a new Matrix object from a 2D vector of doubles. Each element of the 2D vector must contain the
+     * same number of elements. 
+     * 
+     * @param inputEntries The 2D double vector that contains the elements for the new Matrix. 
+     */
+    Matrix(vector<vector<double>> inputEntries);
+
+    /**
+     * @brief Prints out the elements of a the matrix.
+     * 
+     */
+    void printMatrix();
+
+    /**
+     * @brief Calcuates the determnant of the matrix this function is being called on. 
+     * 
+     * @return int: the determinant of this matrix
+     */
+    int determinant();
+
+    /**
+     * @brief Returns the product of this matrix and B. 
+     * 
+     * @param Other: matrix to be multiplied with this matrix
+     * @return Matrix: the product (this Matrix)(Other). Returns NULL if such a product does not exist
+     */
+    Matrix multiply(Matrix Other);
+
+    unsigned int getNumRows();
+
+    unsigned int getNumColumns();
+
+    double getElementAtIndex(int a, int b);
+};
