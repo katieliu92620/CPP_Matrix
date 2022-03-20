@@ -72,6 +72,7 @@ int Matrix::determinant(){
 }
 
 Matrix Matrix::multiply(Matrix Other){
+    //checking if matrix dimensions match
     if(this->numColumns!=Other.getNumRows()){
         cerr<<"Matrix Dimensions do not match. "<<endl;
         return NULL;
@@ -84,15 +85,18 @@ Matrix Matrix::multiply(Matrix Other){
     double currEntry;
 
     for(unsigned int i=0;i<this->numRows;i++){
+        //getting the curent row to be multiplied with a corresponding column of the other matrixs
         vector<double> currRow=this->entries[i];
 
         for(unsigned int j=0;j<otherRowLength;j++){
             currEntry=0;
             vector<double> currCol;
+            //getting the current column in the other matrix to be multiplied with a row of this matrix
             for(unsigned int k=0;k<otherColumnLength;k++){
                 currCol.push_back(Other.getElementAtIndex(k,j));
             }
 
+            //multiplying corresponding entries from the two matrices
             for(unsigned int l=0;l<thisRowLength;l++){
                 currEntry=currEntry+currRow[l]*currCol[l];
                 answer[i][j]=currEntry;
@@ -113,7 +117,27 @@ unsigned int Matrix::getNumColumns(){
     return this->numColumns;
 }
 
-double Matrix::getElementAtIndex(int a, int b){
-    return (this->entries.at(a)).at(b);
+double Matrix::getElementAtIndex(int i, int j){
+    return (this->entries.at(i)).at(j);
+}
+
+Matrix Matrix::subMatrix(int i, int j){
+    vector<vector<double>> subMatrixVector=this->entries;
+    vector<vector<double>>::iterator itRow=subMatrixVector.begin();
+    advance(itRow,i);
+    subMatrixVector.erase(itRow);
+    unsigned int subMatrixNumRows=subMatrixVector.size();
+    itRow=subMatrixVector.begin();
+    
+    vector<double> currRow;
+    vector<double>::iterator itCol;
+    for(unsigned int i=0;i<subMatrixNumRows;i++){
+        itCol=subMatrixVector[i].begin();
+        advance(itCol,j);
+        subMatrixVector[i].erase(itCol);
+    }
+    
+    Matrix submatrix=Matrix(subMatrixVector);
+    return submatrix;
 }
 

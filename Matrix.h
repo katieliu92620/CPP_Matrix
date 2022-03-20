@@ -10,7 +10,7 @@ class Matrix{
 
 
     /**
-    * @brief Construct a new default Matrix object. Creates an empty matrix of size 0 x 0. s
+    * @brief Construct a new default Matrix object. Creates an empty matrix of size 0 x 0.
     * 
     */
     Matrix();
@@ -60,5 +60,21 @@ class Matrix{
 
     unsigned int getNumColumns();
 
-    double getElementAtIndex(int a, int b);
+    /**
+     * @brief gets the entry of the Matrix located at row i and column j.
+     * 
+     * @param i: row index of the entry to be retrieved
+     * @param j: column index of the entry to be retrieved
+     * @return double: entry of Matrix retrieved by row i and column j
+     */
+    double getElementAtIndex(int i, int j);
+
+    /**
+     * @brief Generates a submatrix of this matrix that excludes row i and column j of the original matrix.
+     * 
+     * @param i: row to be excluded in submatrix
+     * @param j: column to be excluded in the submatrix
+     * @return Matrix: submatrix of the original matrix where row i and column j has been deleted
+     */
+    Matrix subMatrix(int i, int j);
 };
