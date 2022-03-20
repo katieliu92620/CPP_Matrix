@@ -61,7 +61,7 @@ void Matrix::printMatrix(){
     unsigned int colCount=this->numColumns;
     for(unsigned int i=0;i<numRows;i++){
         for(unsigned int j=0;j<numColumns;j++){
-            cout<<(this->entries)[i][j];
+            printf("%6.3f  ", this->entries[i][j]);;
         }
         cout<<endl;
     }
