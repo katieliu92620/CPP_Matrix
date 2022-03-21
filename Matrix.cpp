@@ -14,6 +14,7 @@ Matrix::Matrix(){
     this->entries=vector<vector<double>>(0,vector<double>(0,0));
 }
 
+
 Matrix::Matrix(const char* const &matrix_csv){
     this->entries=vector<vector<double>>(0,vector<double>(0,0));
     ifstream my_file(matrix_csv);
@@ -67,9 +68,47 @@ void Matrix::printMatrix(){
     }
 }
 
+
 int Matrix::determinant(){
     return 0;
 }
+
+
+Matrix Matrix::operator+(Matrix const &Other){
+    if(this->numRows!=Other.getNumRows()||this->numColumns!=Other.getNumColumns()){
+        cerr<<"Dimensions do not match."<<endl;
+        return NULL;
+    }
+    vector<vector<double>> answer= this->entries;
+    unsigned int numRows=this->numRows;
+    unsigned int numCols=this->numColumns;
+    for(unsigned int i=0;i<numRows;i++){
+        for(unsigned int j=0;j<numColumns;j++){
+            answer[i][j]=answer[i][j]+Other.getElementAtIndex(i,j);
+        }
+    }
+
+    return Matrix(answer);
+}
+
+
+Matrix Matrix::operator-(Matrix const &Other){
+    if(this->numRows!=Other.getNumRows()||this->numColumns!=Other.getNumColumns()){
+        cerr<<"Dimensions do not match."<<endl;
+        return NULL;
+    }
+    vector<vector<double>> answer= this->entries;
+    unsigned int numRows=this->numRows;
+    unsigned int numCols=this->numColumns;
+    for(unsigned int i=0;i<numRows;i++){
+        for(unsigned int j=0;j<numColumns;j++){
+            answer[i][j]=answer[i][j]-Other.getElementAtIndex(i,j);
+        }
+    }
+
+    return Matrix(answer);
+}
+
 
 Matrix Matrix::operator*(Matrix const &Other){
     {
@@ -110,17 +149,21 @@ Matrix Matrix::operator*(Matrix const &Other){
     }
 }
 
+
 unsigned int Matrix::getNumRows() const{
     return this->numRows;
 }
+
 
 unsigned int Matrix::getNumColumns() const{
     return this->numColumns;
 }
 
+
 double Matrix::getElementAtIndex(int i, int j) const{
     return (this->entries.at(i)).at(j);
 }
+
 
 Matrix Matrix::subMatrix(int i, int j){
     vector<vector<double>> subMatrixVector=this->entries;

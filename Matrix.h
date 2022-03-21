@@ -50,6 +50,23 @@ class Matrix{
     int determinant();
 
     /**
+     * @brief Overloads + operator with Matrix addition
+     * 
+     * @param Other: matrix to be added to this matrix
+     * @return Matrix: the sum of this matrix and other. Returns NULL if such a sum does not exist
+     */
+    Matrix operator+(Matrix const &Other);
+
+    /**
+     * @brief Overloads - operator with Matrix subtraction
+     * 
+     * @param Other: matrix to be subtracted from this matrix
+     * @return Matrix: the difference that results from subtracting Other from this matrix. Returns NULL
+     * is such a difference does not exist. 
+     */
+    Matrix operator-(Matrix const &Other);
+
+    /**
      * @brief Overloads * operator with Matrix multiplication
      * 
      * @param Other: matrix to be multiplied with this matrix
