@@ -71,10 +71,11 @@ int Matrix::determinant(){
     return 0;
 }
 
-Matrix Matrix::multiply(Matrix Other){
-    //checking if matrix dimensions match
-    if(this->numColumns!=Other.getNumRows()){
+Matrix Matrix::operator*(Matrix const &Other){
+    {
+        if(this->numColumns!=Other.getNumRows()){
         cerr<<"Matrix Dimensions do not match. "<<endl;
+        Matrix dummy=Matrix();
         return NULL;
     }
 
@@ -105,19 +106,19 @@ Matrix Matrix::multiply(Matrix Other){
         }
 
     }
-
-    return Matrix(answer);
+        return Matrix(answer);
+    }
 }
 
-unsigned int Matrix::getNumRows(){
+unsigned int Matrix::getNumRows() const{
     return this->numRows;
 }
 
-unsigned int Matrix::getNumColumns(){
+unsigned int Matrix::getNumColumns() const{
     return this->numColumns;
 }
 
-double Matrix::getElementAtIndex(int i, int j){
+double Matrix::getElementAtIndex(int i, int j) const{
     return (this->entries.at(i)).at(j);
 }
 

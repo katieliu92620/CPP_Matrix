@@ -11,5 +11,24 @@ int main(){
     matrix1.printMatrix();
     Matrix submatrix=matrix1.subMatrix(3,0);
     submatrix.printMatrix();
+
+    vector<vector<double>> vector1={
+        {1,2},
+        {3,4}
+    };
+    Matrix matrix2=Matrix(vector1);
+
+
+    vector<vector<double>> vector2={
+        {1,2},
+        {3,4}
+    };
+    Matrix matrix3=Matrix(vector2);
+
+    matrix2.printMatrix();
+    matrix3.printMatrix();
+    Matrix product=matrix2*matrix3;
+    product.printMatrix();
+
     return 0;
 }

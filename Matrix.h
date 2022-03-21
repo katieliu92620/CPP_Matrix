@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 using namespace std;
 
 class Matrix{
@@ -49,16 +50,16 @@ class Matrix{
     int determinant();
 
     /**
-     * @brief Returns the product of this matrix and B. 
+     * @brief Overloads * operator with Matrix multiplication
      * 
      * @param Other: matrix to be multiplied with this matrix
      * @return Matrix: the product (this Matrix)(Other). Returns NULL if such a product does not exist
      */
-    Matrix multiply(Matrix Other);
+    Matrix operator*(Matrix const &Other);
 
-    unsigned int getNumRows();
+    unsigned int getNumRows() const;
 
-    unsigned int getNumColumns();
+    unsigned int getNumColumns() const;
 
     /**
      * @brief gets the entry of the Matrix located at row i and column j.
@@ -67,7 +68,7 @@ class Matrix{
      * @param j: column index of the entry to be retrieved
      * @return double: entry of Matrix retrieved by row i and column j
      */
-    double getElementAtIndex(int i, int j);
+    double getElementAtIndex(int i, int j) const;
 
     /**
      * @brief Generates a submatrix of this matrix that excludes row i and column j of the original matrix.
@@ -77,4 +78,5 @@ class Matrix{
      * @return Matrix: submatrix of the original matrix where row i and column j has been deleted
      */
     Matrix subMatrix(int i, int j);
+
 };
