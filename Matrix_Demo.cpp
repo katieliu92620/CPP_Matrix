@@ -7,37 +7,65 @@
 using namespace std;
 
 int main(){
-    Matrix matrix1=Matrix("example/fourByFour.txt");
-    matrix1.printMatrix();
-    Matrix submatrix=matrix1.subMatrix(3,0);
-    submatrix.printMatrix();
 
     vector<vector<double>> vector1={
-        {1,3.14},
-        {3,4}
+        {1,3.14,1},
+        {3,4, 2},
+        {2, 2, 2}
     };
-    Matrix matrix2=Matrix(vector1);
+    Matrix matrix1=Matrix(vector1);
 
+    cout<<"Testing determinants: "<<endl;
+    matrix1.printMatrix();
+    double determinant=matrix1.determinant();
+    cout<<endl;
+    cout<<"determinant: "<<determinant<<endl;
+    if(determinant!=-4.28){
+        cout<<"determinant was incorrect"<<endl;
+        return -1;
+    }
 
     vector<vector<double>> vector2={
-        {1,2},
-        {0.5,5}
+        {4,0,7,4},
+        {0,5,0,0},
+        {0,5,22.5,34},
+        {8,1,0,0}
     };
-    Matrix matrix3=Matrix(vector2);
 
-    cout<<"Matrix A: "<<endl;
+    Matrix matrix2=Matrix(vector2);
+    cout<<endl;
     matrix2.printMatrix();
-    cout<<"Matrix B: "<<endl;
+    determinant=matrix2.determinant();
+    cout<<endl;
+    cout<<"determinant: "<<determinant<<endl;
+    if(determinant!=5920){
+        cout<<"determinant was incorrect"<<endl;
+        return -1;
+    }
+
+
+    vector<vector<double>> vector3={
+        {4,0,7,4, 5.1},
+        {0,5,0,0,10},
+        {0,5,22.5,34,3},
+        {8,1,0,0,0.7},
+        {1,1,4.4,1.1,1}
+    };
+
+    Matrix matrix3=Matrix(vector3);
+    cout<<endl;
     matrix3.printMatrix();
-    cout<<"A+B:" <<endl;
-    Matrix sum=matrix2+matrix3;
-    sum.printMatrix();
-    cout<<"A-B: "<<endl;
-    Matrix difference=matrix2-matrix3;
-    difference.printMatrix();
-    cout<<"A*B: "<<endl;
-    Matrix product=matrix2*matrix3;
-    product.printMatrix();
+    determinant=matrix3.determinant();
+    cout<<endl;
+    cout<<"determinant: "<<determinant<<endl;
+    if(determinant!=-36445.5){
+        cout<<"determinant was incorrect"<<endl;
+        return -1;
+    }
+
+    
+    
+
 
     return 0;
 }

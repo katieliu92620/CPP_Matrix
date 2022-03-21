@@ -45,9 +45,9 @@ class Matrix{
     /**
      * @brief Calcuates the determnant of the matrix this function is being called on. 
      * 
-     * @return int: the determinant of this matrix
+     * @return double: the determinant of this matrix
      */
-    int determinant();
+    double determinant();
 
     /**
      * @brief Overloads + operator with Matrix addition

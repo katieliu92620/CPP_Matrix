@@ -69,8 +69,29 @@ void Matrix::printMatrix(){
 }
 
 
-int Matrix::determinant(){
-    return 0;
+double Matrix::determinant(){
+    if(this->numRows!=this->numColumns){
+        throw invalid_argument("Not a square matrix");
+    }
+
+    //base case size=2
+    if(this->numRows==2){
+        double determinant=this->entries[0][0]*this->entries[1][1]-this->entries[0][1]*this->entries[1][0];
+        return determinant;
+    }
+    int index=-1;
+    unsigned int rowLength=this->numColumns;
+    double determinant=0;
+    Matrix submatrix;
+
+    //if matrix dimensions larget than 2x2 does confactor expansion along first row with recursive calls to determinant()
+    for(unsigned int i=0;i<rowLength;i++){
+        index=index*(-1);
+        submatrix=this->subMatrix(0,i);
+        determinant=determinant+(index*this->entries[0][i]*submatrix.determinant());
+    }
+    
+    return determinant;
 }
 
 
@@ -176,9 +197,9 @@ Matrix Matrix::subMatrix(int i, int j){
     vector<double> currRow;
     vector<double>::iterator itCol;
     for(unsigned int i=0;i<subMatrixNumRows;i++){
-        itCol=subMatrixVector[i].begin();
+        itCol=(subMatrixVector.at(i)).begin();
         advance(itCol,j);
-        subMatrixVector[i].erase(itCol);
+        (subMatrixVector.at(i)).erase(itCol);
     }
     
     Matrix submatrix=Matrix(subMatrixVector);
