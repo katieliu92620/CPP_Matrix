@@ -68,6 +68,24 @@ class Matrix{
     Matrix operator*(Matrix const &Other);
 
     /**
+     * @brief Overloads == operator to check if two matrices are equal
+     * 
+     * @param Other: Matrix to be compared with this matrix
+     * @return true: if the two matrices are equal
+     * @return false: if the two matrices are not equal
+     */
+    bool operator==(Matrix const &Other);
+
+    /**
+     * @brief Overloads != opertor to check if two matrices are not equal
+     * 
+     * @param Other: Matrix to be compared with thsi matrix
+     * @return true: if the two matrices are equal
+     * @return false: if the two matrices are not equal
+     */
+    bool operator!=(Matrix const &Other);
+
+    /**
      * @brief Calcuates the determnant of the matrix this function is being called on. 
      * 
      * @return double: the determinant of this matrix

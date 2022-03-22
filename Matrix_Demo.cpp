@@ -1,71 +1,54 @@
-//compile with $ g++ -o Matrix_Demo Matrix_Demo.cpp Matrix.cpp
-
 #include "Matrix.h"
 #include <iostream>
-#include <vector>
 
-using namespace std;
-
-int main(){
-
-    vector<vector<double>> vector1={
-        {1,3.14,1},
-        {3,4, 2},
-        {2, 2, 2}
-    };
-    Matrix matrix1=Matrix(vector1);
-
-    cout<<"Testing determinants: "<<endl;
-    matrix1.printMatrix();
-    double determinant=matrix1.determinant();
-    cout<<endl;
-    cout<<"determinant: "<<determinant<<endl;
-    if(determinant!=-4.28){
-        cout<<"determinant was incorrect"<<endl;
-        return -1;
+int main(int argc, char** argv){
+    if(argc<2){
+        cerr << "USAGE: " << argv[0] << " <matrix_csv_1> ... <matrix_csv_n>" <<endl; exit(1);
     }
 
-    vector<vector<double>> vector2={
-        {4,0,7,4},
-        {0,5,0,0},
-        {0,5,22.5,34},
-        {8,1,0,0}
-    };
+    vector<Matrix> matrixVector;
 
-    Matrix matrix2=Matrix(vector2);
-    cout<<endl;
-    matrix2.printMatrix();
-    determinant=matrix2.determinant();
-    cout<<endl;
-    cout<<"determinant: "<<determinant<<endl;
-    if(determinant!=5920){
-        cout<<"determinant was incorrect"<<endl;
-        return -1;
+    for(int i=1;i<argc;i++){
+        Matrix curr=Matrix(argv[i]);
+        matrixVector.push_back(curr);
     }
 
-
-    vector<vector<double>> vector3={
-        {4,0,7,4, 5.1},
-        {0,5,0,0,10},
-        {0,5,22.5,34,3},
-        {8,1,0,0,0.7},
-        {1,1,4.4,1.1,1}
-    };
-
-    Matrix matrix3=Matrix(vector3);
-    cout<<endl;
-    matrix3.printMatrix();
-    determinant=matrix3.determinant();
-    cout<<endl;
-    cout<<"determinant: "<<determinant<<endl;
-    if(determinant!=-36445.5){
-        cout<<"determinant was incorrect"<<endl;
-        return -1;
+    unsigned int numMatrices=matrixVector.size();
+    for(unsigned int j=0;j<numMatrices;j++){
+        cout<<endl;
+        cout<<endl;
+        cout<<"Curr Matrix from: "<<argv[j+1]<<endl;
+        Matrix curr=matrixVector.at(j);
+        curr.printMatrix();
+        cout<<endl;
+        cout<<"determinant: "<<endl;
+        try{
+            cout<<curr.determinant()<<endl;
+        }
+        catch(domain_error){
+            cout<<"Determinant does not exist"<<endl;
+        }
+        cout<<endl;
+        cout<<"adjoint matrix:"<<endl;
+        try{
+            Matrix adj=curr.adjoint();
+            adj.printMatrix();
+        }
+        catch(domain_error){
+            cout<<"adjoint matrix does not exist"<<endl;
+        }
+        
+        cout<<endl;
+        cout<<"Inverse: "<<endl;
+        try{
+            Matrix inv=curr.inverse();
+            inv.printMatrix();
+        }
+        catch(domain_error){
+            cout<<"inverse matrix does not exist"<<endl;
+        }
+        
     }
-
-    
-    
-
 
     return 0;
 }

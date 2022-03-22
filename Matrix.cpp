@@ -5,6 +5,7 @@
 #include <string>
 #include <stdlib.h>
 #include <vector>
+#include <optional>
 
 using namespace std;
 
@@ -57,6 +58,10 @@ Matrix::Matrix(vector<vector<double>> inputEntries){
 }
 
 void Matrix::printMatrix(){
+    if(this->numRows==0||this->numColumns==0){
+        cout<<"[]"<<endl;
+        return;
+    }
     cout<<endl;
     unsigned int rowCount=this->numRows;
     unsigned int colCount=this->numColumns;
@@ -144,20 +149,58 @@ Matrix Matrix::operator*(Matrix const &Other){
     }
 }
 
+
+bool Matrix::operator==(Matrix const &Other){
+    if(this->numRows!=Other.getNumRows()||this->numColumns!=Other.getNumColumns()){
+        return false;
+    }
+    unsigned int numRows=this->numRows;
+    unsigned int numColumns=this->numColumns;
+    for(unsigned int i=0;i<numRows;i++){
+        for(unsigned int j=0;j<numColumns;j++){
+            if(this->entries[i][j]!=Other.getElementAtIndex(i,j)){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool Matrix::operator!=(Matrix const &Other){
+    return !(*this==Other);
+}
+
+
 Matrix Matrix::inverse(){
-    //check if determinant exists
-    if(this->determinant()==0){
-        return NULL;
+    //check if this matrix is square
+    if(this->numRows!=this->numColumns){
+        throw domain_error("Not a square matrix");
     }
 
-    return Matrix();
+    //check if inverse exists
+    double determinant=this->determinant();
+    if(determinant==0){
+        throw domain_error("Matrix determinant is 0");
+    }
+
+    unsigned int size=this->numRows;
+    vector<vector<double>> inverseVector=vector<vector<double>>(size,vector<double>(size,0));
+    Matrix adj=this->adjoint();
+
+    for(unsigned int i=0;i<size;i++){
+        for(unsigned int j=0;j<size;j++){
+            inverseVector[i][j]=adj.getElementAtIndex(i,j)/determinant;
+        }
+    }
+
+    return Matrix(inverseVector);
     
 }
 
 
 double Matrix::determinant(){
     if(this->numRows!=this->numColumns){
-        throw invalid_argument("Not a square matrix");
+        throw domain_error("Not a square matrix.");
     }
 
     //base case size = 1
@@ -228,9 +271,27 @@ Matrix Matrix::subMatrix(int i, int j){
 
 Matrix Matrix::adjoint(){
     if(this->numRows!=this->numColumns){
-        return NULL;
+        throw domain_error("Not a square matrix");
     }
     vector<vector<double>> adjVector=vector<vector<double>>(this->numRows, vector<double>(this->numColumns,0));
+    unsigned int size=this->numRows;
+    double cofactor=0;
+    int index;
+    for(unsigned int i=0;i<size;i++){
+        for(unsigned int j=0;j<size;j++){
+            Matrix submatrix=this->subMatrix(i,j);
+            cofactor=submatrix.determinant();
+            if((i+j)%2==0){
+                index=1;
+            }
+            else{
+                index=-1;
+            }
+            cofactor=cofactor*index;
+            adjVector[j][i]=cofactor;
+        }
+    }
+    
     return Matrix(adjVector);
 }
 
