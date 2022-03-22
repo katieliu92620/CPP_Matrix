@@ -69,32 +69,6 @@ void Matrix::printMatrix(){
 }
 
 
-double Matrix::determinant(){
-    if(this->numRows!=this->numColumns){
-        throw invalid_argument("Not a square matrix");
-    }
-
-    //base case size=2
-    if(this->numRows==2){
-        double determinant=this->entries[0][0]*this->entries[1][1]-this->entries[0][1]*this->entries[1][0];
-        return determinant;
-    }
-    int index=-1;
-    unsigned int rowLength=this->numColumns;
-    double determinant=0;
-    Matrix submatrix;
-
-    //if matrix dimensions larget than 2x2 does confactor expansion along first row with recursive calls to determinant()
-    for(unsigned int i=0;i<rowLength;i++){
-        index=index*(-1);
-        submatrix=this->subMatrix(0,i);
-        determinant=determinant+(index*this->entries[0][i]*submatrix.determinant());
-    }
-    
-    return determinant;
-}
-
-
 Matrix Matrix::operator+(Matrix const &Other){
     if(this->numRows!=Other.getNumRows()||this->numColumns!=Other.getNumColumns()){
         cerr<<"Dimensions do not match."<<endl;
@@ -170,6 +144,47 @@ Matrix Matrix::operator*(Matrix const &Other){
     }
 }
 
+Matrix Matrix::inverse(){
+    //check if determinant exists
+    if(this->determinant()==0){
+        return NULL;
+    }
+
+    return Matrix();
+    
+}
+
+
+double Matrix::determinant(){
+    if(this->numRows!=this->numColumns){
+        throw invalid_argument("Not a square matrix");
+    }
+
+    //base case size = 1
+    if(this->numRows==1){
+        return this->entries[0][0];
+    }
+
+    //base case size=2
+    if(this->numRows==2){
+        double determinant=this->entries[0][0]*this->entries[1][1]-this->entries[0][1]*this->entries[1][0];
+        return determinant;
+    }
+    int index=-1;
+    unsigned int rowLength=this->numColumns;
+    double determinant=0;
+    Matrix submatrix;
+
+    //if matrix dimensions larget than 2x2 does confactor expansion along first row with recursive calls to determinant()
+    for(unsigned int i=0;i<rowLength;i++){
+        index=index*(-1);
+        submatrix=this->subMatrix(0,i);
+        determinant=determinant+(index*this->entries[0][i]*submatrix.determinant());
+    }
+    
+    return determinant;
+}
+
 
 unsigned int Matrix::getNumRows() const{
     return this->numRows;
@@ -187,22 +202,35 @@ double Matrix::getElementAtIndex(int i, int j) const{
 
 
 Matrix Matrix::subMatrix(int i, int j){
-    vector<vector<double>> subMatrixVector=this->entries;
-    vector<vector<double>>::iterator itRow=subMatrixVector.begin();
-    advance(itRow,i);
-    subMatrixVector.erase(itRow);
-    unsigned int subMatrixNumRows=subMatrixVector.size();
-    itRow=subMatrixVector.begin();
-    
-    vector<double> currRow;
-    vector<double>::iterator itCol;
-    for(unsigned int i=0;i<subMatrixNumRows;i++){
-        itCol=(subMatrixVector.at(i)).begin();
-        advance(itCol,j);
-        (subMatrixVector.at(i)).erase(itCol);
+    unsigned int numRows=this->numRows;
+    unsigned int numColumns=this->numColumns;
+    vector<vector<double>> subMatrixVector=vector<vector<double>>(numRows-1,vector<double>(numColumns-1,0));
+    int subRow=0;
+    int subCol=0;
+    for(unsigned int rowCounter=0;rowCounter<numRows;rowCounter++){
+        subCol=0;
+        if(rowCounter==i){
+            continue;
+        }
+        for(unsigned int colCounter=0;colCounter<numColumns;colCounter++){
+            if(colCounter==j){
+                continue;
+            }
+            subMatrixVector[subRow][subCol]=this->entries[rowCounter][colCounter];
+            subCol++;
+        }
+        subRow++;
     }
-    
-    Matrix submatrix=Matrix(subMatrixVector);
-    return submatrix;
+    Matrix subMatrix=Matrix(subMatrixVector);
+    return subMatrix;
+}
+
+
+Matrix Matrix::adjoint(){
+    if(this->numRows!=this->numColumns){
+        return NULL;
+    }
+    vector<vector<double>> adjVector=vector<vector<double>>(this->numRows, vector<double>(this->numColumns,0));
+    return Matrix(adjVector);
 }
 

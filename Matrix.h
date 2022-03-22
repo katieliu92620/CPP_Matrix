@@ -43,13 +43,6 @@ class Matrix{
     void printMatrix();
 
     /**
-     * @brief Calcuates the determnant of the matrix this function is being called on. 
-     * 
-     * @return double: the determinant of this matrix
-     */
-    double determinant();
-
-    /**
      * @brief Overloads + operator with Matrix addition
      * 
      * @param Other: matrix to be added to this matrix
@@ -74,6 +67,20 @@ class Matrix{
      */
     Matrix operator*(Matrix const &Other);
 
+    /**
+     * @brief Calcuates the determnant of the matrix this function is being called on. 
+     * 
+     * @return double: the determinant of this matrix
+     */
+    double determinant();
+
+    /**
+     * @brief returns the inverse matrix of this Matrix
+     * 
+     * @return Matrix: inverse of this Matrix, returns NULL if inverse does not exist
+     */
+    Matrix inverse();
+
     unsigned int getNumRows() const;
 
     unsigned int getNumColumns() const;
@@ -95,5 +102,12 @@ class Matrix{
      * @return Matrix: submatrix of the original matrix where row i and column j has been deleted
      */
     Matrix subMatrix(int i, int j);
+
+    /**
+     * @brief Generates the ajoint matrix of this matrix
+     * 
+     * @return Matrix: adjoint matrix of this matrix, returns NULL if such a matrix does not exist
+     */
+    Matrix adjoint();
 
 };
