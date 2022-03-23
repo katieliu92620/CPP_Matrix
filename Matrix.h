@@ -37,6 +37,13 @@ class Matrix{
     Matrix(vector<vector<double>> inputEntries);
 
     /**
+     * @brief Construct a new Matrix object which is the identity matrix of size size.
+     * 
+     * @param size: size of the identity Matrix to be constructed
+     */
+    Matrix(unsigned int size);
+
+    /**
      * @brief Prints out the elements of a the matrix.
      * 
      */

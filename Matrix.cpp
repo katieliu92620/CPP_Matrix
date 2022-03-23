@@ -24,8 +24,8 @@ Matrix::Matrix(const char* const &matrix_csv){
     //reading in row and column count of matrix
     //checking that file is not empty
     if(!getline(my_file,line)){
-        cerr<<"Please do not input an empty file."<<endl;
-        return;
+        cerr<<"Please do no input an invalid file. "<<endl;
+        throw invalid_argument("please do not input an invalid file");
     }
     istringstream ss(line);
     string rowCount;
@@ -53,7 +53,12 @@ Matrix::Matrix(const char* const &matrix_csv){
 
 Matrix::Matrix(vector<vector<double>> inputEntries){
     this->numRows=inputEntries.size();
-    this->numColumns=inputEntries[0].size();
+    if(this->numRows==0){
+        this->numColumns=0;
+    }
+    else{
+        this->numColumns=inputEntries[0].size();
+    }
     this->entries=inputEntries;
 }
 
@@ -73,11 +78,20 @@ void Matrix::printMatrix(){
     }
 }
 
+Matrix::Matrix(unsigned int size){
+    vector<vector<double>> idEntries=vector<vector<double>>(size,vector<double>(size,0));
+    for(unsigned int i=0;i<size;i++){
+        idEntries[i][i]=1;
+    }
+    this->entries=idEntries;
+    this->numRows=size;
+    this->numColumns=size;
+}
+
 
 Matrix Matrix::operator+(Matrix const &Other){
     if(this->numRows!=Other.getNumRows()||this->numColumns!=Other.getNumColumns()){
-        cerr<<"Dimensions do not match."<<endl;
-        return NULL;
+        throw invalid_argument("Matrix dimensions do not match");
     }
     vector<vector<double>> answer= this->entries;
     unsigned int numRows=this->numRows;
@@ -94,8 +108,7 @@ Matrix Matrix::operator+(Matrix const &Other){
 
 Matrix Matrix::operator-(Matrix const &Other){
     if(this->numRows!=Other.getNumRows()||this->numColumns!=Other.getNumColumns()){
-        cerr<<"Dimensions do not match."<<endl;
-        return NULL;
+        throw invalid_argument("Matrix dimensions do not match");
     }
     vector<vector<double>> answer= this->entries;
     unsigned int numRows=this->numRows;
@@ -111,11 +124,8 @@ Matrix Matrix::operator-(Matrix const &Other){
 
 
 Matrix Matrix::operator*(Matrix const &Other){
-    {
-        if(this->numColumns!=Other.getNumRows()){
-        cerr<<"Matrix Dimensions do not match. "<<endl;
-        Matrix dummy=Matrix();
-        return NULL;
+    if(this->numColumns!=Other.getNumRows()){
+       throw invalid_argument("Matrix dimensions do not match");
     }
 
     unsigned int thisRowLength=this->numColumns;
@@ -146,8 +156,8 @@ Matrix Matrix::operator*(Matrix const &Other){
 
     }
         return Matrix(answer);
-    }
 }
+
 
 
 bool Matrix::operator==(Matrix const &Other){
@@ -201,6 +211,11 @@ Matrix Matrix::inverse(){
 double Matrix::determinant(){
     if(this->numRows!=this->numColumns){
         throw domain_error("Not a square matrix.");
+    }
+
+    //base case size=0
+    if(this->numRows==0){
+        return 1;
     }
 
     //base case size = 1
@@ -273,6 +288,7 @@ Matrix Matrix::adjoint(){
     if(this->numRows!=this->numColumns){
         throw domain_error("Not a square matrix");
     }
+
     vector<vector<double>> adjVector=vector<vector<double>>(this->numRows, vector<double>(this->numColumns,0));
     unsigned int size=this->numRows;
     double cofactor=0;

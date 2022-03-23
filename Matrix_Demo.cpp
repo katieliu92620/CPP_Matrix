@@ -1,54 +1,104 @@
 #include "Matrix.h"
 #include <iostream>
+#include <string.h>
+using namespace std;
 
 int main(int argc, char** argv){
-    if(argc<2){
-        cerr << "USAGE: " << argv[0] << " <matrix_csv_1> ... <matrix_csv_n>" <<endl; exit(1);
+    if(argc!=2&&argc!=4){
+        cerr << "USAGE: " << argv[0] << " <matrix_csv>" <<endl; 
+        cerr << "USAGE: " << argv[0] << " <matrix_csv_1> <operation_name> <mastrix_csv_2>" <<endl; exit(1);
     }
 
-    vector<Matrix> matrixVector;
+    string add="add";
+    string sub="subtract";
+    string mult="multiply";
+   
 
-    for(int i=1;i<argc;i++){
-        Matrix curr=Matrix(argv[i]);
-        matrixVector.push_back(curr);
-    }
-
-    unsigned int numMatrices=matrixVector.size();
-    for(unsigned int j=0;j<numMatrices;j++){
+    if(argc==2){
+        
         cout<<endl;
         cout<<endl;
-        cout<<"Curr Matrix from: "<<argv[j+1]<<endl;
-        Matrix curr=matrixVector.at(j);
+        Matrix curr=Matrix(argv[1]);
+        cout<<"Matrix is from: "<<argv[1]<<endl;
         curr.printMatrix();
-        cout<<endl;
+        printf("\n\n");
         cout<<"determinant: "<<endl;
         try{
-            cout<<curr.determinant()<<endl;
+            printf("\n%.3f\n\n",curr.determinant());
         }
         catch(domain_error){
             cout<<"Determinant does not exist"<<endl;
         }
-        cout<<endl;
-        cout<<"adjoint matrix:"<<endl;
+        printf("\nadjoint matrix: \n");
         try{
             Matrix adj=curr.adjoint();
             adj.printMatrix();
+            printf("\n");
         }
         catch(domain_error){
             cout<<"adjoint matrix does not exist"<<endl;
         }
         
         cout<<endl;
-        cout<<"Inverse: "<<endl;
+        printf("\nInverse: \n");
         try{
             Matrix inv=curr.inverse();
             inv.printMatrix();
+            printf("\n");
         }
         catch(domain_error){
             cout<<"inverse matrix does not exist"<<endl;
         }
         
     }
+    else{
+        Matrix first=Matrix(argv[1]);
+        printf("\n");
+        cout<<"First Matrix from: "<<argv[1]<<endl;
+        first.printMatrix();
+        printf("\n");
+        printf("\n");
+        Matrix second=Matrix(argv[3]);
+        cout<<"Second Matrix from: "<<argv[3]<<endl;
+        second.printMatrix();
+        printf("\n");
+        if(argv[2]==add){
+            try{
+                printf("\nSum:\n");
+                Matrix sum=first+second;
+                sum.printMatrix();
+            }
+            catch(invalid_argument){
+                printf("\nSum does not exist because dimensions do not match.\n");
+            }
+        }
+        else if(argv[2]==sub){
+            try{
+                printf("\nDifference:\n");
+                Matrix difference=first-second;
+                difference.printMatrix();
+            }
+            catch(invalid_argument){
+                printf("\nDifference does not exist because dimensions do not match.\n");
+            }
+        }
+        else if(argv[2]==mult){
+            try{
+                printf("\nProduct:\n");
+                Matrix product=first*second;
+                product.printMatrix();
+            }
+            catch(invalid_argument){
+                printf("\nProduct does not exist because dimensions do not match.\n");
+            }
+        }
+        else{
+            cout<<"Please input a valid operator name, valid operator names are: "<<add<<", "<<sub<<", "<<mult<<"."<<endl;
+            exit(1);
+        }
+        
+    }
+    
 
     return 0;
 }
