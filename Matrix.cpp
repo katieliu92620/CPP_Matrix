@@ -17,37 +17,35 @@ Matrix::Matrix(){
 
 
 Matrix::Matrix(const char* const &matrix_csv){
+    //first initialize all fields to default values;
+    this->numRows=0;
+    this->numColumns=0;
     this->entries=vector<vector<double>>(0,vector<double>(0,0));
     ifstream my_file(matrix_csv);
-    string line;
-
-    //reading in row and column count of matrix
-    //checking that file is not empty
-    if(!getline(my_file,line)){
-        cerr<<"Please do no input an invalid file. "<<endl;
-        throw invalid_argument("please do not input an invalid file");
+    if(!my_file.is_open()){
+        cerr<<"file open failed."<<endl;
+        exit(1);
     }
-    istringstream ss(line);
-    string rowCount;
-    string columnCount;
 
-    getline(ss, rowCount, ',');
-    getline(ss, columnCount,',');
-    this->numRows=stoi(rowCount);
-    this->numColumns=stoi(columnCount);
+    string line;
+    string value;
 
-    this->entries=vector<vector<double>>(numRows,vector<double>(numColumns,0));
-
-    //Reading in the entries of this matrix from the csv file
-    for(unsigned int i=0;i<this->numRows;i++){
-         getline(my_file,line);
-         istringstream ss(line);
-         for(unsigned int j=0;j<this->numColumns;j++){
-             string currNumString;
-             getline(ss,currNumString,',');
-             this->entries[i][j]=stod(currNumString);
-             
-         }
+    //if file is not empty, iterates through entire file to fill up entries vector
+    while(getline (my_file, line)){
+        vector<double> curr;
+        stringstream s (line);
+        while (getline (s, value, ',')){
+            curr.push_back (stod (value));
+        }
+        this->entries.push_back(curr);
+        this->numRows=this->entries.size();
+        if(this->numRows!=0){
+            this->numColumns=this->entries.at(0).size();
+        }
+        else{
+            this->numColumns=0;
+        }
+            
     }
 }
 
@@ -62,7 +60,7 @@ Matrix::Matrix(vector<vector<double>> inputEntries){
     this->entries=inputEntries;
 }
 
-void Matrix::printMatrix(){
+void Matrix::printMatrix() const{
     if(this->numRows==0||this->numColumns==0){
         cout<<"[]"<<endl;
         return;
@@ -72,7 +70,7 @@ void Matrix::printMatrix(){
     unsigned int colCount=this->numColumns;
     for(unsigned int i=0;i<numRows;i++){
         for(unsigned int j=0;j<numColumns;j++){
-            printf("%6.3f  ", this->entries[i][j]);;
+            printf("%7.3f  ", this->entries[i][j]);;
         }
         cout<<endl;
     }
@@ -134,23 +132,15 @@ Matrix Matrix::operator*(Matrix const &Other){
     vector<vector<double>> answer=vector<vector<double>>(this->numRows,vector<double>(Other.getNumColumns(),0));
     double currEntry;
 
+    //three nested loops for iterating over matrix for matrix multiplication
     for(unsigned int i=0;i<this->numRows;i++){
-        //getting the curent row to be multiplied with a corresponding column of the other matrixs
         vector<double> currRow=this->entries[i];
-
         for(unsigned int j=0;j<otherRowLength;j++){
             currEntry=0;
-            vector<double> currCol;
-            //getting the current column in the other matrix to be multiplied with a row of this matrix
             for(unsigned int k=0;k<otherColumnLength;k++){
-                currCol.push_back(Other.getElementAtIndex(k,j));
+                currEntry=currEntry+this->getElementAtIndex(i,k)*Other.getElementAtIndex(k,j);
             }
-
-            //multiplying corresponding entries from the two matrices
-            for(unsigned int l=0;l<thisRowLength;l++){
-                currEntry=currEntry+currRow[l]*currCol[l];
-                answer[i][j]=currEntry;
-            }
+            answer[i][j]=currEntry;
             
         }
 
@@ -162,13 +152,15 @@ Matrix Matrix::operator*(Matrix const &Other){
 
 bool Matrix::operator==(Matrix const &Other){
     if(this->numRows!=Other.getNumRows()||this->numColumns!=Other.getNumColumns()){
+        cout<<"dimentions not equal"<<endl;
         return false;
     }
     unsigned int numRows=this->numRows;
     unsigned int numColumns=this->numColumns;
     for(unsigned int i=0;i<numRows;i++){
         for(unsigned int j=0;j<numColumns;j++){
-            if(this->entries[i][j]!=Other.getElementAtIndex(i,j)){
+            //comparison accounts for rounding errors in floating point arithmetic
+            if(abs(this->entries[i][j]-Other.getElementAtIndex(i,j))>0.001){
                 return false;
             }
         }
@@ -181,7 +173,7 @@ bool Matrix::operator!=(Matrix const &Other){
 }
 
 
-Matrix Matrix::inverse(){
+Matrix Matrix::inverse() const{
     //check if this matrix is square
     if(this->numRows!=this->numColumns){
         throw domain_error("Not a square matrix");
@@ -208,7 +200,7 @@ Matrix Matrix::inverse(){
 }
 
 
-double Matrix::determinant(){
+double Matrix::determinant() const{
     if(this->numRows!=this->numColumns){
         throw domain_error("Not a square matrix.");
     }
@@ -259,7 +251,7 @@ double Matrix::getElementAtIndex(int i, int j) const{
 }
 
 
-Matrix Matrix::subMatrix(int i, int j){
+Matrix Matrix::subMatrix(int i, int j) const{
     unsigned int numRows=this->numRows;
     unsigned int numColumns=this->numColumns;
     vector<vector<double>> subMatrixVector=vector<vector<double>>(numRows-1,vector<double>(numColumns-1,0));
@@ -284,7 +276,7 @@ Matrix Matrix::subMatrix(int i, int j){
 }
 
 
-Matrix Matrix::adjoint(){
+Matrix Matrix::adjoint() const{
     if(this->numRows!=this->numColumns){
         throw domain_error("Not a square matrix");
     }

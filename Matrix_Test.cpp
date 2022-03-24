@@ -3,6 +3,8 @@
 #include "Matrix.h"
 #include <iostream>
 #include <vector>
+#include <cassert>
+#include <assert.h>
 
 using namespace std;
 
@@ -15,15 +17,9 @@ int main(){
     };
     Matrix matrix1=Matrix(vector1);
 
-    cout<<"Testing determinants: "<<endl;
-    matrix1.printMatrix();
+    printf("\nTesting determinants.\n");
     double determinant=matrix1.determinant();
-    cout<<endl;
-    cout<<"determinant: "<<determinant<<endl;
-    if(determinant!=-4.28){
-        cout<<"determinant was incorrect"<<endl;
-        return -1;
-    }
+    assert(abs(determinant-(-4.28))<0.001);
 
     vector<vector<double>> vector2={
         {4,0,7,4},
@@ -33,15 +29,8 @@ int main(){
     };
 
     Matrix matrix2=Matrix(vector2);
-    cout<<endl;
-    matrix2.printMatrix();
     determinant=matrix2.determinant();
-    cout<<endl;
-    cout<<"determinant: "<<determinant<<endl;
-    if(determinant!=5920){
-        cout<<"determinant was incorrect"<<endl;
-        return -1;
-    }
+    assert(abs(determinant-5920)<0.001);
 
 
     vector<vector<double>> vector3={
@@ -53,18 +42,9 @@ int main(){
     };
 
     Matrix matrix3=Matrix(vector3);
-    cout<<endl;
-    matrix3.printMatrix();
     determinant=matrix3.determinant();
-    cout<<endl;
-    cout<<"determinant: "<<determinant<<endl;
-    if(determinant!=-36445.5){
-        cout<<"determinant was incorrect"<<endl;
-        return -1;
-    }
+    assert(abs(determinant-(-36445.5))<0.001);
 
-    cout<<endl;
-    cout<<"Testing adjoint:"<<endl;
     vector<vector<double>> vector4={
         {1, -2 , 4, 7},
         {1, 0, 1, 3},
@@ -73,7 +53,9 @@ int main(){
     };
 
     Matrix matrix4=Matrix(vector4);
-    matrix4.printMatrix();
+
+    Matrix zeroByZero=Matrix("example/zeroByZero.csv");
+    assert(zeroByZero.determinant()==1);
 
     vector<vector<double>> vector5={
         {-16, 84, -67, -35},
@@ -83,18 +65,45 @@ int main(){
     };
 
     Matrix matrix5=Matrix(vector5);
-    cout<<endl;
     Matrix matrix6=matrix4.adjoint();
 
-    cout<<"adjoint: "<<endl;
-    matrix6.printMatrix();
+    printf("\nTesting adjoints.\n");
     
-    if(matrix6!=matrix5){
-        cout<<"adjoint was incorrect"<<endl;
-        return -1;
-    }
+    assert(matrix6==matrix5);
+
+    Matrix matrix11=Matrix("example/oneByOne.csv");
+    matrix11=matrix11.adjoint();
+    Matrix matrix12=Matrix("solutions/oneByOneAdjoint.csv");
+    assert(matrix11==matrix12);
+
+    printf("\nTesting inverses.\n");
+    matrix11=Matrix("example/oneByOne.csv");
+    vector<vector<double>> inverse11=vector<vector<double>>(1,vector<double>(1,0.5));
+    assert(matrix11.inverse()==Matrix(inverse11));
+    matrix11=Matrix("example/twoByTwo.csv");
+    assert(matrix11.inverse()==Matrix("solutions/twoByTwoInv.csv"));
+
+    printf("\nTesting operations.\n");
+    Matrix matrix7=Matrix("example/fourByFour.csv");
+    matrix7=matrix7*matrix7;
+    Matrix matrix8=Matrix("solutions/fourByFourMultFourByFour.csv");
+    assert (matrix7==matrix8);
+
+    Matrix matrix9=Matrix(6);
+    Matrix matrix10=Matrix("solutions/identitySix.csv");
+    assert(matrix9==matrix10);
+
+    matrix9=matrix9*matrix9;
+    assert(matrix9==matrix10);
+
+    matrix9=Matrix("example/fourByFour.csv");
+    matrix10=Matrix("example/fourByTwo.csv");
+    matrix8=Matrix("solutions/fourByFourMultFourByTwo.csv");
+    assert((matrix9*matrix10)==matrix8);
+
+    
 
 
-
+    printf("\nAll tests have passed.\n");
     return 0;
 }

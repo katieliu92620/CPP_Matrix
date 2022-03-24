@@ -19,10 +19,8 @@ class Matrix{
 
     public:
     /**
-     * @brief Construct a new Matrix object from a formatted csv file. The file needs to begin with a line 
-     * containing two numbers: r,c. Where r is the number of rows in the matrix and c is the number of columns. 
-     * The rest of the file contains the elements of the actual matrix, with each element being separated by a comma
-     * and each row beginning with a new line. 
+     * @brief Construct a new Matrix object from a formatted csv file. Tthe file contains the elements of the matrix, 
+     * with each element being separated by a comma and each row beginning with a new line. 
      * 
      * @param matrix_csv: name of the csv file containing the matrix
      */
@@ -47,7 +45,7 @@ class Matrix{
      * @brief Prints out the elements of a the matrix.
      * 
      */
-    void printMatrix();
+    void printMatrix() const;
 
     /**
      * @brief Overloads + operator with Matrix addition
@@ -97,17 +95,27 @@ class Matrix{
      * 
      * @return double: the determinant of this matrix
      */
-    double determinant();
+    double determinant() const;
 
     /**
      * @brief returns the inverse matrix of this Matrix
      * 
      * @return Matrix: inverse of this Matrix, returns NULL if inverse does not exist
      */
-    Matrix inverse();
+    Matrix inverse() const;
 
+    /**
+     * @brief Get the number of rows in this Matrix.
+     * 
+     * @return unsigned int: number of rows in this Matrix.
+     */
     unsigned int getNumRows() const;
 
+    /**
+     * @brief Get the number of columns in this Matrix.
+     * 
+     * @return unsigned int: numberfof columns in this Matrix.
+     */
     unsigned int getNumColumns() const;
 
     /**
@@ -126,13 +134,13 @@ class Matrix{
      * @param j: column to be excluded in the submatrix
      * @return Matrix: submatrix of the original matrix where row i and column j has been deleted
      */
-    Matrix subMatrix(int i, int j);
+    Matrix subMatrix(int i, int j) const;
 
     /**
      * @brief Generates the ajoint matrix of this matrix
      * 
      * @return Matrix: adjoint matrix of this matrix, returns NULL if such a matrix does not exist
      */
-    Matrix adjoint();
+    Matrix adjoint() const;
 
 };
